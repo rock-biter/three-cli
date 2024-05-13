@@ -1,9 +1,14 @@
 {
-  "name": "three-cli",
-  "version": "0.1.0",
+  "name": "three-3",
+  "version": "0.2.0",
   "description": "Easily create your three.js vite project with one command",
-  "repository": "https://github.com/rock-biter/three-cli",
-  "bin": "./index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rock-biter/three-cli.git"
+  },
+  "bin": {
+    "create-3": "index.mjs"
+  },
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
