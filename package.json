@@ -1,7 +1,8 @@
 {
   "name": "three-cli",
   "version": "0.1.0",
-  "description": "creare three.js project scaffolding",
+  "description": "Easily create your three.js vite project with one command",
+  "repository": "https://github.com/rock-biter/three-cli",
   "bin": "./index.mjs",
   "type": "module",
   "scripts": {
@@ -9,6 +10,9 @@
   },
   "keywords": [
     "node",
+    "js",
+    "command",
+    "npx",
     "three.js"
   ],
   "author": "Gianluca Lomarco",
