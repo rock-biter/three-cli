@@ -1,6 +1,6 @@
 {
   "name": "create-3",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Easily create your three.js vite project with one command",
   "repository": {
     "type": "git",

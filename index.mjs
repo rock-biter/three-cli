@@ -94,7 +94,7 @@ program.action((options) => {
 			);
 		})
 		.then(() => {
-			console.log('Installing dev dependencies');
+			// console.log('Installing dev dependencies');
 			return runCommand(
 				`cd ${name} && npm install -D tailwindcss postcss autoprefixer`
 			);
