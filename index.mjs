@@ -68,14 +68,14 @@ program.action((options) => {
 	inquirer
 		.prompt([...prompts])
 		.then(async (answers) => {
-			console.log(answers.choice);
-			console.log(chalk.green(`${answers.camera} camera.`));
-			console.log(chalk.green(`Hey, ${name || answers.name}!`));
-			console.log(
-				lights || answers.lights
-					? chalk.green('Lights yes')
-					: chalk.red('No lights')
-			);
+			// console.log(answers.choice);
+			// console.log(chalk.green(`${answers.camera} camera.`));
+			// console.log(chalk.green(`Hey, ${name || answers.name}!`));
+			// console.log(
+			// 	lights || answers.lights
+			// 		? chalk.green('Lights yes')
+			// 		: chalk.red('No lights')
+			// );
 
 			name = name || answers.name;
 
