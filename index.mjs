@@ -165,7 +165,7 @@ program.action((options) => {
 			return Object.assign({}, answers, options)
 		})
 		.then(async (answers) => {
-			await runCommand('npm i create-vite', debug)
+			await runCommand('npm i -g create-vite', debug)
 
 			return answers
 		})
