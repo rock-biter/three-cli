@@ -6,7 +6,11 @@ import { program } from 'commander'
 import inquirer from 'inquirer'
 // import { exec } from 'child_process';
 import ora from 'ora'
-import runCommand, { getFileContent, writeFile } from './src/utils/index.mjs'
+import runCommand, {
+	getFileContent,
+	isEmpty,
+	writeFile,
+} from './src/utils/index.mjs'
 import pkg from './src/utils/configs.cjs'
 const { configs } = pkg
 import { builder } from './src/utils/vanilla/builder.mjs'
@@ -161,10 +165,21 @@ program.action((options) => {
 		.then(async (answers) => {
 			// console.log(answers)
 			name = name || answers.name
+			name = name.replaceAll(' ', '-')
+
+			spinner = ora(`Check project name...`).start()
+
+			// if(!isEmpty)
+			// console.log('exists: ', fs.existsSync(`${name}`))
+			// console.log('empty: ', isEmpty(`${name}`))
+			if (fs.existsSync(`${name}`) && !isEmpty(`${name}`)) {
+				throw `This folder is not empty: ${name}`
+			}
 
 			return Object.assign({}, answers, options)
 		})
 		.then(async (answers) => {
+			spinner.succeed(chalk.bgGreen('Done!'))
 			await runCommand('npm i -g create-vite', debug)
 
 			return answers

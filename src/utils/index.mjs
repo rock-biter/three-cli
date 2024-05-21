@@ -58,3 +58,7 @@ export function getFileContent(path, encoding = 'utf-8') {
 		})
 	})
 }
+
+export function isEmpty(path) {
+	return fs.readdirSync(path).length === 0
+}
