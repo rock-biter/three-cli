@@ -15,8 +15,9 @@ program.version('0.1.0').description('My Node CLI')
 
 // program.option("-l, --lights", "Add lights");
 program.option('-n, --name <type>', 'Add your name')
+program.option('-d, --debug', 'Show messages')
 program.action((options) => {
-	let { name, lights } = options
+	let { name, debug } = options
 
 	const prompts = []
 
@@ -164,22 +165,27 @@ program.action((options) => {
 			return Object.assign({}, answers, options)
 		})
 		.then(async (answers) => {
-			await runCommand('npm i create-vite')
+			await runCommand('npm i create-vite', debug)
 
 			return answers
 		})
 		.then(async (answers) => {
 			spinner = ora(`Create vite project...`).start()
 			// console.log('create vite project');
-			await runCommand(`npm create vite@latest ${name} -- --template vanilla`)
+			await runCommand(
+				`npm create vite@latest ${name} -- --template vanilla`,
+				// `npm create vite@latest ${name}`,
+				debug
+			)
 
 			return answers
 		})
 		.then(async (answers) => {
-			spinner.succeed(chalk.green('Done!'))
+			spinner.succeed(chalk.bgGreen('Done!'))
 			spinner = ora(`Installing dependencies...`).start()
 			await runCommand(
-				`cd ${name} && npm install && npm install three gsap lil-gui`
+				`cd ${name} && npm install && npm install three gsap lil-gui`,
+				debug
 			)
 
 			return answers
@@ -187,47 +193,61 @@ program.action((options) => {
 		.then(async (answers) => {
 			// console.log('Installing dev dependencies');
 			await runCommand(
-				`cd ${name} && npm install -D tailwindcss postcss autoprefixer`
+				`cd ${name} && npm install -D tailwindcss postcss autoprefixer`,
+				debug
 			)
 
 			return answers
 		})
 		.then(async (answers) => {
-			spinner.succeed(chalk.green('Done!'))
+			spinner.succeed(chalk.bgGreen('Done!'))
 			spinner = ora(`Preparing 3D scene...`).start()
 			const files = ['tailwind.config.js', 'style.css', 'postcss.config.js']
 
-			files.forEach((fileName) => {
-				fs.readFile(
-					path.join(configs.INIT_PATH, fileName),
-					'utf8',
-					async (err, data) => {
-						// console.log('data:', data);
-						// console.log('err:', err);
-
-						if (data) {
-							await writeFile(`${name}/${fileName}`, data)
-						}
-					}
+			for await (const fileName of files) {
+				const data = await getFileContent(
+					path.join(configs.INIT_PATH, fileName)
 				)
-			})
+
+				if (data) {
+					writeFile(path.join(`${name}`, `${fileName}`), data)
+				}
+			}
+
+			// files.forEach((fileName) => {
+
+			// 	// fs.readFile(
+			// 	// 	path.join(configs.INIT_PATH, fileName),
+			// 	// 	'utf8',
+			// 	// 	async (err, data) => {
+			// 	// 		// console.log('data:', data);
+			// 	// 		// console.log('err:', err);
+
+			// 	// 		if (data) {
+			// 	// 			await writeFile(path.join(`${name}`, `${fileName}`), data)
+			// 	// 		}
+			// 	// 	}
+			// 	// )
+			// })
 
 			const data = await getFileContent(
-				path.join(configs.INIT_PATH, './src/stubs/vanilla/scene.js')
+				path.join(configs.INIT_PATH, 'src', 'stubs', 'vanilla', 'scene.js')
 			)
 
 			if (data) {
-				writeFile(`${name}/main.js`, await builder(data, answers))
-				console.log(chalk.green('Main.js copied!'))
+				writeFile(path.join(`${name}`, `main.js`), await builder(data, answers))
+				// console.log(chalk.green('Main.js copied!'))
 			}
 		})
 		.then(() => {
-			spinner.succeed(chalk.green('Done!'))
+			spinner.succeed(chalk.bgGreen('Done!'))
+			console.log(chalk.gray('--------'))
 			console.log(
-				chalk.green(
-					`Done. Now run:	${name !== '.' ? `cd ${name}\n` : ''}	npm run dev`
+				chalk.cyan.bold(
+					`\nNow run:\n\n${name !== '.' ? ` cd ${name}\n` : ''} npm run dev\n`
 				)
 			)
+			console.log(chalk.gray('--------'))
 		})
 		.catch((err) => {
 			spinner.fail(chalk.red(`Error: ${err}`))

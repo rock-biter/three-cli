@@ -41,13 +41,23 @@ async function addCamera(data, cameraName) {
 	cameraData += await getFileContent(
 		path.join(
 			configs.INIT_PATH,
-			`./src/stubs/vanilla/chunks/${cameraName}/index.js`
+			`src`,
+			`stubs`,
+			`vanilla`,
+			`chunks`,
+			`${cameraName}`,
+			`index.js`
 		)
 	)
 	const cameraResizeData = await getFileContent(
 		path.join(
 			configs.INIT_PATH,
-			`./src/stubs/vanilla/chunks/${cameraName}/resize.js`
+			`src`,
+			`stubs`,
+			`vanilla`,
+			`chunks`,
+			`${cameraName}`,
+			`resize.js`
 		)
 	)
 
@@ -72,7 +82,12 @@ async function addLights(data, lightTypes = []) {
 			getFileContent(
 				path.join(
 					configs.INIT_PATH,
-					`./src/stubs/vanilla/chunks/lights/${light}.js`
+					`src`,
+					`stubs`,
+					`vanilla`,
+					`chunks`,
+					`lights`,
+					`${light}.js`
 				)
 			)
 		),
