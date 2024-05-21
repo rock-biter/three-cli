@@ -164,6 +164,11 @@ program.action((options) => {
 			return Object.assign({}, answers, options)
 		})
 		.then(async (answers) => {
+			await runCommand('npm i create-vite')
+
+			return answers
+		})
+		.then(async (answers) => {
 			spinner = ora(`Create vite project...`).start()
 			// console.log('create vite project');
 			await runCommand(`npm create vite@latest ${name} -- --template vanilla`)
