@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import { getFileContent, writeFile } from '../index.mjs'
 import * as path from 'node:path'
 import pkg from '../../utils/configs.cjs'
@@ -21,6 +22,12 @@ export default class Builder {
 
 	async build() {
 		// Replace camera placeholder
+
+		// remove unused file App.css
+		if (fs.existsSync(path.join(`${this.projectName}`, 'src', `App.css`))) {
+			fs.rmSync(path.join(`${this.projectName}`, 'src', `App.css`))
+		}
+
 		let AppData = await getFileContent(
 			path.join(`${this.projectName}`, 'src', `App.jsx`)
 		)
