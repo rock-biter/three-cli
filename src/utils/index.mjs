@@ -26,16 +26,18 @@ export default function runCommand(command, showOut = false) {
 		// })
 		exec(command, (error, stdout, stderr) => {
 			if (error) {
-				console.error('Error', error.message)
-				reject(error)
+				// console.log('errore: ', error)
+				console.error('Error: ', error.message)
+				// reject(error)
 			}
 
 			if (stderr) {
-				console.error('Error', stderr)
-				reject(stderr)
+				// console.log('errore: ', error)
+				console.error('Error: ', stderr)
+				// reject(stderr)
 			}
 
-			if (showOut) console.log(`Output : ${stdout}`)
+			if (showOut) console.log(`Output: ${stdout}`)
 
 			resolve()
 		})

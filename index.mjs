@@ -14,6 +14,9 @@ import runCommand, {
 import pkg from './src/utils/configs.cjs'
 const { configs } = pkg
 import { builder } from './src/utils/vanilla/builder.mjs'
+import { getDependencies } from './src/utils/dependencies.mjs'
+import getFilesMap from './src/utils/filesMap.mjs'
+import Builder from './src/utils/react/builder.mjs'
 
 program.version('0.1.0').description('My Node CLI')
 
@@ -30,17 +33,26 @@ program.action((options) => {
 			type: 'input',
 			name: 'name',
 			message: 'Project name',
-			default: '.',
+			default: 'my-three-project',
 		})
 	}
 
 	// TODO add frameworks
-	// prompts.push({
-	// 	type: 'list',
-	// 	name: 'framework',
-	// 	message: 'Select an option',
-	// 	choices: ['Vanilla'],
-	// });
+	prompts.push({
+		type: 'list',
+		name: 'framework',
+		message: 'Select an option',
+		choices: [
+			{
+				name: 'Vanilla',
+				value: 'vanilla',
+			},
+			{
+				name: 'React',
+				value: 'react',
+			},
+		],
+	})
 
 	// Camera
 	prompts.push(
@@ -180,15 +192,27 @@ program.action((options) => {
 		})
 		.then(async (answers) => {
 			spinner.succeed(chalk.bgGreen('Done!'))
-			await runCommand('npm i -g create-vite', debug)
+			await runCommand('npm install -g create-vite', debug)
 
 			return answers
 		})
 		.then(async (answers) => {
 			spinner = ora(`Create vite project...`).start()
 			// console.log('create vite project');
+
+			let command
+
+			switch (answers.framework) {
+				case 'vanilla':
+					command = `npm create vite@latest ${name} -- --template vanilla`
+					break
+				case 'react':
+					command = `npm create vite@latest ${name} -- --template react`
+					break
+			}
+
 			await runCommand(
-				`npm create vite@latest ${name} -- --template vanilla`,
+				command,
 				// `npm create vite@latest ${name}`,
 				debug
 			)
@@ -198,15 +222,18 @@ program.action((options) => {
 		.then(async (answers) => {
 			spinner.succeed(chalk.bgGreen('Done!'))
 			spinner = ora(`Installing dependencies...`).start()
+
+			const dependencies = getDependencies(answers.framework)
+
+			// install dependencies
+			await runCommand(`cd ${name} && npm install`, debug)
+
 			await runCommand(
-				`cd ${name} && npm install && npm install three gsap lil-gui`,
+				`cd ${name} && npm install ${dependencies.join(' ')}`,
 				debug
 			)
 
-			return answers
-		})
-		.then(async (answers) => {
-			// console.log('Installing dev dependencies');
+			// install dev dependencies
 			await runCommand(
 				`cd ${name} && npm install -D tailwindcss postcss autoprefixer`,
 				debug
@@ -217,41 +244,42 @@ program.action((options) => {
 		.then(async (answers) => {
 			spinner.succeed(chalk.bgGreen('Done!'))
 			spinner = ora(`Preparing 3D scene...`).start()
-			const files = ['tailwind.config.js', 'style.css', 'postcss.config.js']
+			// const files = ['tailwind.config.js', 'style.css', 'postcss.config.js']
+			const { framework } = answers
 
-			for await (const fileName of files) {
+			const files = getFilesMap({
+				framework,
+			})
+
+			for await (const file of files) {
+				const { fileName, fromPath, toPath } = file
+
 				const data = await getFileContent(
-					path.join(configs.INIT_PATH, fileName)
+					path.join(configs.INIT_PATH, fromPath, fileName)
 				)
 
 				if (data) {
-					writeFile(path.join(`${name}`, `${fileName}`), data)
+					writeFile(path.join(`${name}`, toPath, `${fileName}`), data)
 				}
 			}
 
-			// files.forEach((fileName) => {
+			if (framework === 'react') {
+				const builder = new Builder({ projectName: name, options: answers })
+				await builder.build()
+			}
 
-			// 	// fs.readFile(
-			// 	// 	path.join(configs.INIT_PATH, fileName),
-			// 	// 	'utf8',
-			// 	// 	async (err, data) => {
-			// 	// 		// console.log('data:', data);
-			// 	// 		// console.log('err:', err);
+			if (framework === 'vanilla') {
+				const data = await getFileContent(
+					path.join(configs.INIT_PATH, 'src', 'stubs', 'vanilla', 'scene.js')
+				)
 
-			// 	// 		if (data) {
-			// 	// 			await writeFile(path.join(`${name}`, `${fileName}`), data)
-			// 	// 		}
-			// 	// 	}
-			// 	// )
-			// })
-
-			const data = await getFileContent(
-				path.join(configs.INIT_PATH, 'src', 'stubs', 'vanilla', 'scene.js')
-			)
-
-			if (data) {
-				writeFile(path.join(`${name}`, `main.js`), await builder(data, answers))
-				// console.log(chalk.green('Main.js copied!'))
+				if (data) {
+					writeFile(
+						path.join(`${name}`, `main.js`),
+						await builder(data, answers)
+					)
+					// console.log(chalk.green('Main.js copied!'))
+				}
 			}
 		})
 		.then(() => {
@@ -267,6 +295,11 @@ program.action((options) => {
 		.catch((err) => {
 			spinner.fail(chalk.red(`Error: ${err}`))
 			// console.log(chalk.red(`Error: ${err}`))
+		})
+		.finally(() => {
+			if (spinner.isSpinning) {
+				spinner.info(chalk.cyan(`Finish!`))
+			}
 		})
 })
 
