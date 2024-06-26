@@ -48,7 +48,7 @@ program.action((options) => {
 				value: 'vanilla',
 			},
 			{
-				name: 'React',
+				name: 'React Three Fiber',
 				value: 'react',
 			},
 		],

@@ -48,6 +48,11 @@ This will create a new folder where all project files will be created. You can u
 
 Insert the name of the project. Asked only if --name option is omitted when command is launched.
 
+#### Framework
+
+Select an option
+Choose one between Vanilla and React Three Fiber.
+
 #### Camera
 
 What camera do you want to use?
@@ -94,10 +99,9 @@ This is a list of functionalities that i want to add to this command in the next
 
 - Add different type of Camera Constrols
 - Add Helpers
-- Select dependecies: gsap, tailwindscss, gui, ...
+- Select dependencies: gsap, tailwindscss, gui, ...
 - Add PostProcessing
 - Add physics: Rapier, Cannon
 - Add more options: --camera, --controls, physics
-- Add React + React Three Fiber starter
 - Add Svelte + Threlte starter
 - ...
