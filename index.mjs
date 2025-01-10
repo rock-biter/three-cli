@@ -269,16 +269,25 @@ program.action((options) => {
 			}
 
 			if (framework === 'vanilla') {
-				const data = await getFileContent(
+				const jsData = await getFileContent(
 					path.join(configs.INIT_PATH, 'src', 'stubs', 'vanilla', 'scene.js')
 				)
 
-				if (data) {
+				const cssData = await getFileContent(
+					path.join(configs.INIT_PATH, 'src', 'stubs', 'vanilla', 'style.css')
+				)
+
+				if (jsData) {
 					writeFile(
-						path.join(`${name}`, `main.js`),
-						await builder(data, answers)
+						path.join(`${name}`, 'src', `main.js`),
+						await builder(jsData, answers)
 					)
-					// console.log(chalk.green('Main.js copied!'))
+					console.log(chalk.green('Main.js copied!'))
+				}
+
+				if (cssData) {
+					writeFile(path.join(`${name}`, 'src', `style.css`), cssData)
+					console.log(chalk.green('style.css copied!'))
 				}
 			}
 		})
