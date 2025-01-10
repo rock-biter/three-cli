@@ -282,12 +282,12 @@ program.action((options) => {
 						path.join(`${name}`, 'src', `main.js`),
 						await builder(jsData, answers)
 					)
-					console.log(chalk.green('Main.js copied!'))
+					// console.log(chalk.green('Main.js copied!'))
 				}
 
 				if (cssData) {
 					writeFile(path.join(`${name}`, 'src', `style.css`), cssData)
-					console.log(chalk.green('style.css copied!'))
+					// console.log(chalk.green('style.css copied!'))
 				}
 			}
 		})
