@@ -233,12 +233,6 @@ program.action((options) => {
 				debug
 			)
 
-			// install dev dependencies
-			await runCommand(
-				`cd ${name} && npm install -D tailwindcss postcss autoprefixer`,
-				debug
-			)
-
 			return answers
 		})
 		.then(async (answers) => {

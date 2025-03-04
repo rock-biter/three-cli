@@ -2,17 +2,7 @@ import * as path from 'node:path'
 
 const vanillaFilesMap = [
 	{
-		fileName: 'tailwind.config.js',
-		fromPath: path.join('src', 'stubs', frameworkFolder('vanilla')),
-		toPath: '',
-	},
-	{
 		fileName: 'style.css',
-		fromPath: path.join('src', 'stubs', frameworkFolder('vanilla')),
-		toPath: '',
-	},
-	{
-		fileName: 'postcss.config.js',
 		fromPath: path.join('src', 'stubs', frameworkFolder('vanilla')),
 		toPath: '',
 	},
