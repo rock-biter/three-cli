@@ -4,6 +4,11 @@ const vanillaFilesMap = [
 	{
 		fileName: 'style.css',
 		fromPath: path.join('src', 'stubs', frameworkFolder('vanilla')),
+		toPath: 'src',
+	},
+	{
+		fileName: 'vite.config.js',
+		fromPath: path.join('src', 'stubs', frameworkFolder('vanilla')),
 		toPath: '',
 	},
 ]

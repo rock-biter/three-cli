@@ -1,13 +1,14 @@
 export function getDependencies(framework) {
-	const dependecies = ['gsap', 'lil-gui']
+	const dependecies = ['gsap']
 
 	switch (framework) {
 		case 'vanilla':
-			dependecies.push('three')
+			dependecies.push('three', 'vite-plugin-glsl', 'tweakpane')
 			break
 		case 'react':
 			dependecies.push(
 				'three',
+				'lil-gui',
 				'@types/three',
 				'@react-three/fiber',
 				'@react-three/drei'
