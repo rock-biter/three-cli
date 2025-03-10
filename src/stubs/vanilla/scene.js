@@ -72,7 +72,6 @@ scene.add(axesHelper)
  */
 const renderer = new THREE.WebGLRenderer({
 	antialias: window.devicePixelRatio < 2,
-	logarithmicDepthBuffer: true,
 })
 document.body.appendChild(renderer.domElement)
 handleResize()
